@@ -1,4 +1,4 @@
-package com.example.demo.infra.batch.config;
+package com.example.demo.infra.batch.config.repository;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

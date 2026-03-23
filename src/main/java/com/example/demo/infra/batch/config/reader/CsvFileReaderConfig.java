@@ -1,4 +1,4 @@
-package com.example.demo.infra.batch.config;
+package com.example.demo.infra.batch.config.reader;
 
 import com.example.demo.domain.model.Payment;
 import org.springframework.batch.infrastructure.item.ItemReader;

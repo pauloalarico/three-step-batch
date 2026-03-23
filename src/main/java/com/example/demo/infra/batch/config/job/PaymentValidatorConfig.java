@@ -1,4 +1,4 @@
-package com.example.demo.infra.batch.config;
+package com.example.demo.infra.batch.config.job;
 
 import com.example.demo.domain.model.Payment;
 import org.springframework.batch.core.configuration.annotation.EnableJdbcJobRepository;
