@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: demo
+  datasource:
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
+    jdbcUrl: ${DB_URL}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      jdbc-url: ${DB_URL}

@@ -1,0 +1,40 @@
+package com.example.demo.infra.batch.config;
+
+import com.example.demo.domain.model.Payment;
+import org.springframework.batch.core.configuration.annotation.EnableJdbcJobRepository;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.Step;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.infrastructure.item.ItemReader;
+import org.springframework.batch.infrastructure.item.ItemWriter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+@Configuration
+@EnableJdbcJobRepository
+public class PaymentValidatorConfig {
+
+    @Bean
+    public Job job(JobRepository jobRepository, Step initialStep) {
+        return new JobBuilder("paymentVerificado", jobRepository)
+                .start(initialStep)
+                .build();
+    }
+
+    @Bean
+    public Step initialStep(JobRepository jobRepository,
+                            ItemReader<Payment> reader,
+                            ItemWriter<Payment> writer,
+                            PlatformTransactionManager transactionManager) {
+        return new StepBuilder("first-step", jobRepository)
+                .<Payment, Payment>chunk(2)
+                .transactionManager(transactionManager)
+                .reader(reader)
+                .writer(writer)
+                .build();
+    }
+
+}
