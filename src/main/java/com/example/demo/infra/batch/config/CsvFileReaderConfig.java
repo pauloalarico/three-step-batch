@@ -4,6 +4,7 @@ import com.example.demo.domain.model.Payment;
 import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.batch.infrastructure.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 
@@ -13,6 +14,7 @@ public class CsvFileReaderConfig {
     @Value("${app.resource}")
     private String inputResource;
 
+    @Bean
     public ItemReader<Payment> reader() {
         return new FlatFileItemReaderBuilder<Payment>()
                 .resource(new FileSystemResource(inputResource))
