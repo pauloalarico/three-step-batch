@@ -23,15 +23,4 @@ public class Payment {
 
     private PaymentStatus status;
 
-
-    public static Payment create(Long id, Long clientId, String clientName, BigDecimal value, LocalDate dueDate, PaymentStatus status) {
-        Payment payment = new Payment();
-        payment.id = id;
-        payment.clientId = clientId;
-        payment.clientName = clientName;
-        payment.value = value;
-        payment.dueDate = dueDate;
-        payment.status = status;
-        return payment;
-    }
 }
