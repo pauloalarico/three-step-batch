@@ -21,6 +21,7 @@ public class CsvFileReaderConfig {
                 .delimited()
                 .delimiter(",")
                 .names("id", "clientId", "clientName", "value", "dueDate", "status")
+                .targetType(Payment.class)
                 .build();
     }
 }
