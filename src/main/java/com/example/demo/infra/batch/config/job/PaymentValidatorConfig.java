@@ -1,6 +1,8 @@
 package com.example.demo.infra.batch.config.job;
 
 import com.example.demo.domain.model.Payment;
+import com.example.demo.domain.model.ProcessedPayment;
+import com.example.demo.infra.batch.config.processor.ValidatorPayment;
 import org.springframework.batch.core.configuration.annotation.EnableJdbcJobRepository;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -27,13 +29,16 @@ public class PaymentValidatorConfig {
     @Bean
     public Step initialStep(JobRepository jobRepository,
                             ItemReader<Payment> reader,
-                            ItemWriter<Payment> writer,
+                            ValidatorPayment processor,
+                            ItemWriter<ProcessedPayment> compositeItemWriter,
                             PlatformTransactionManager transactionManager) {
+
         return new StepBuilder("first-step", jobRepository)
-                .<Payment, Payment>chunk(2)
+                .<Payment, ProcessedPayment>chunk(100)
                 .transactionManager(transactionManager)
                 .reader(reader)
-                .writer(writer)
+                .processor(processor)
+                .writer(compositeItemWriter)
                 .build();
     }
 
