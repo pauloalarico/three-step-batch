@@ -1,15 +1,20 @@
 package com.example.demo.domain.model;
 
 import com.example.demo.domain.enums.PaymentStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Payment {
 
     @Id
@@ -23,6 +28,7 @@ public class Payment {
 
     private LocalDate dueDate;
 
+    @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
 }
