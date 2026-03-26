@@ -17,11 +17,14 @@ public class CsvFileReaderConfig {
     @Bean
     public ItemReader<Payment> reader() {
         return new FlatFileItemReaderBuilder<Payment>()
-                .resource(new FileSystemResource(inputResource))
+                .name("fileReader")
+                .resource(new FileSystemResource(inputResource + "/dados_1000.csv"))
+                .linesToSkip(1)
                 .delimited()
                 .delimiter(",")
                 .names("id", "clientId", "clientName", "value", "dueDate", "status")
-                .targetType(Payment.class)
+                //.targetType(Payment.class)
+                .fieldSetMapper(new PaymentSetFieldMapper())
                 .build();
     }
 }
