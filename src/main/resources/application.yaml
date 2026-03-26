@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: demo
   datasource:
@@ -9,11 +11,21 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       jdbc-url: ${DB_URL}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show-sql: true
 
   batch:
     job:
       enabled: true
 
+  sql:
+    init: always
+
 
 app:
-  resource: ${RESOURCE_FILE}
+  resource: ${RESOURCE_FILE:.input/.}
