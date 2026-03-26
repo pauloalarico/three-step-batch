@@ -1,10 +1,14 @@
 package com.example.demo.infra.batch.config.writer;
 
 import com.example.demo.domain.model.Payment;
-import org.springframework.batch.infrastructure.item.ItemWriter;
+import com.example.demo.domain.model.ProcessedPayment;
+import org.springframework.batch.infrastructure.item.database.ItemSqlParameterSourceProvider;
+import org.springframework.batch.infrastructure.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.infrastructure.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import javax.sql.DataSource;
 
@@ -12,27 +16,51 @@ import javax.sql.DataSource;
 public class DataWriterConfig {
 
     @Bean
-    public ItemWriter<Payment> writerSuccess(DataSource dataSource) {
-        return new JdbcBatchItemWriterBuilder<Payment>()
+    public PaymentCheckerWriter compositeItemWriter(JdbcBatchItemWriter<ProcessedPayment> writerSuccess,
+                                                                               JdbcBatchItemWriter<ProcessedPayment> writerError) {
+        return new PaymentCheckerWriter(writerSuccess, writerError);
+    }
+
+    @Bean
+    public JdbcBatchItemWriter<ProcessedPayment> writerSuccess(DataSource dataSource) {
+        return new JdbcBatchItemWriterBuilder<ProcessedPayment>()
                 .dataSource(dataSource)
                 .sql("""
-                        INSERT INTO payments (id, client_id, client_name, value, due_date, status) 
-                        VALUES (:id, :clientId, :clientName, :value:, :dueDate, :status)
+                        INSERT INTO payments (id, client_id, client_name, value, due_date, status)
+                        VALUES (?, ?, ?, ?, ?, ?)
                         """)
-                .beanMapped()
+                .itemPreparedStatementSetter((processedPayment, ps) -> {
+                    Payment p = processedPayment.payment();
+                    ps.setObject(1, p.getId());
+                    ps.setObject(2, p.getClientId());
+                    ps.setObject(3, p.getClientName());
+                    ps.setObject(4, p.getValue());
+                    ps.setObject(5, p.getDueDate());
+                    ps.setObject(6, p.getStatus().toString());
+        })
                 .build();
     }
 
     @Bean
-    public ItemWriter<Payment> writerError(DataSource dataSource) {
-        return new JdbcBatchItemWriterBuilder<Payment>()
+    public JdbcBatchItemWriter<ProcessedPayment> writerError(DataSource dataSource) {
+        return new JdbcBatchItemWriterBuilder<ProcessedPayment>()
                 .dataSource(dataSource)
                 .sql("""
-                        INSERT INTO dead_payments_table (id, client_id, client_name, value, due_date, status) 
-                        VALUES (:id, :clientId, :clientName, :value:, :dueDate, :status)
+                        INSERT INTO dead_payments (id, client_id, client_name, value, due_date, status)
+                         VALUES (?, ?, ?, ?, ?, ?)
                         """)
                 .beanMapped()
+                .itemPreparedStatementSetter((processedPayment, ps) -> {
+                    Payment p = processedPayment.payment();
+                    ps.setObject(1, p.getId());
+                    ps.setObject(2, p.getClientId());
+                    ps.setObject(3, p.getClientName());
+                    ps.setObject(4, p.getValue());
+                    ps.setObject(5, p.getDueDate());
+                    ps.setObject(6, p.getStatus().toString());
+                })
                 .build();
+
     }
 
 }
