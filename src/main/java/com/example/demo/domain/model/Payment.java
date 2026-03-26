@@ -10,14 +10,12 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Payment {
 
-    @Id
     private Long id;
 
     private Long clientId;
@@ -28,7 +26,6 @@ public class Payment {
 
     private LocalDate dueDate;
 
-    @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
 }
