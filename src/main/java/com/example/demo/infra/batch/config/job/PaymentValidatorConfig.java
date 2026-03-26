@@ -11,18 +11,25 @@ import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.batch.infrastructure.item.ItemWriter;
+import org.springframework.batch.infrastructure.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableJdbcJobRepository
 public class PaymentValidatorConfig {
 
     @Bean
-    public Job job(JobRepository jobRepository, Step initialStep) {
+    public Job job(JobRepository jobRepository, Step initialStep, Step createTableIfNecessary) {
         return new JobBuilder("paymentVerificado", jobRepository)
-                .start(initialStep)
+                .start(createTableIfNecessary)
+                .next(initialStep)
                 .build();
     }
 
@@ -39,6 +46,22 @@ public class PaymentValidatorConfig {
                 .reader(reader)
                 .processor(processor)
                 .writer(compositeItemWriter)
+                .build();
+    }
+
+    @Bean
+    public Step createTableIfNecessary(JobRepository jobRepository,
+                                       PlatformTransactionManager transactionManager,
+                                       DataSource dataSource) {
+
+        return new StepBuilder("create-table", jobRepository)
+                .tasklet(((contribution, chunkContext) -> {
+
+                    Resource resource = new ClassPathResource("initialize.sql");
+                    ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator(resource);
+                    resourceDatabasePopulator.execute(dataSource);
+                    return RepeatStatus.FINISHED;
+                }), transactionManager)
                 .build();
     }
 
