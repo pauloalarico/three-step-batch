@@ -2,6 +2,8 @@ package com.example.demo.infra.batch.config.repository;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.JdbcJobRepositoryFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,6 +17,8 @@ import javax.sql.DataSource;
 
 @Configuration
 @ConfigurationProperties(prefix = "spring.datasource")
+@Getter
+@Setter
 public class JdbcRepositoryConfig {
 
     private String username;
