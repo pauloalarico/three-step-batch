@@ -27,15 +27,15 @@ import javax.sql.DataSource;
 public class PaymentValidatorConfig {
 
     @Bean
-    public Job job(@Qualifier("jobRepositoryMeta") JobRepository jobRepository, Step initialStep, Step createTableIfNecessary) {
-        return new JobBuilder("paymentVerificado", jobRepository)
+    public Job job(JobRepository jobRepository, Step initialStep, Step createTableIfNecessary) {
+        return new JobBuilder("paymentVerificate", jobRepository)
                 .start(createTableIfNecessary)
                 .next(initialStep)
                 .build();
     }
 
     @Bean
-    public Step initialStep(@Qualifier("jobRepositoryMeta")JobRepository jobRepository,
+    public Step initialStep(JobRepository jobRepository,
                             ItemReader<Payment> reader,
                             ValidatorPayment processor,
                             ItemWriter<ProcessedPayment> compositeItemWriter,
@@ -51,7 +51,7 @@ public class PaymentValidatorConfig {
     }
 
     @Bean
-    public Step createTableIfNecessary(@Qualifier("jobRepositoryMeta") JobRepository jobRepository,
+    public Step createTableIfNecessary(JobRepository jobRepository,
                                        PlatformTransactionManager transactionManager,
                                        DataSource dataSource) {
 
