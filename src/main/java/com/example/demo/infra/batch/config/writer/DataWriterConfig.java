@@ -2,13 +2,10 @@ package com.example.demo.infra.batch.config.writer;
 
 import com.example.demo.domain.model.Payment;
 import com.example.demo.domain.model.ProcessedPayment;
-import org.springframework.batch.infrastructure.item.database.ItemSqlParameterSourceProvider;
 import org.springframework.batch.infrastructure.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.infrastructure.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import javax.sql.DataSource;
 
