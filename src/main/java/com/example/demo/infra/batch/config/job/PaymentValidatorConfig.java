@@ -12,6 +12,7 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.batch.infrastructure.repeat.RepeatStatus;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -26,7 +27,7 @@ import javax.sql.DataSource;
 public class PaymentValidatorConfig {
 
     @Bean
-    public Job job(JobRepository jobRepository, Step initialStep, Step createTableIfNecessary) {
+    public Job job(@Qualifier("jobRepositoryMeta") JobRepository jobRepository, Step initialStep, Step createTableIfNecessary) {
         return new JobBuilder("paymentVerificado", jobRepository)
                 .start(createTableIfNecessary)
                 .next(initialStep)
@@ -34,7 +35,7 @@ public class PaymentValidatorConfig {
     }
 
     @Bean
-    public Step initialStep(JobRepository jobRepository,
+    public Step initialStep(@Qualifier("jobRepositoryMeta")JobRepository jobRepository,
                             ItemReader<Payment> reader,
                             ValidatorPayment processor,
                             ItemWriter<ProcessedPayment> compositeItemWriter,
@@ -50,15 +51,17 @@ public class PaymentValidatorConfig {
     }
 
     @Bean
-    public Step createTableIfNecessary(JobRepository jobRepository,
+    public Step createTableIfNecessary(@Qualifier("jobRepositoryMeta") JobRepository jobRepository,
                                        PlatformTransactionManager transactionManager,
                                        DataSource dataSource) {
 
         return new StepBuilder("create-table", jobRepository)
-                .tasklet(((contribution, chunkContext) -> {
+                .allowStartIfComplete(true)
+                .tasklet(((_, _) -> {
 
                     Resource resource = new ClassPathResource("initialize.sql");
                     ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator(resource);
+                    resourceDatabasePopulator.setContinueOnError(true);
                     resourceDatabasePopulator.execute(dataSource);
                     return RepeatStatus.FINISHED;
                 }), transactionManager)
