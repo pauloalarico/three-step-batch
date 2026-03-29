@@ -12,7 +12,6 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.batch.infrastructure.repeat.RepeatStatus;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -28,7 +27,7 @@ public class PaymentValidatorConfig {
 
     @Bean
     public Job job(JobRepository jobRepository, Step initialStep, Step createTableIfNecessary) {
-        return new JobBuilder("paymentVerificate", jobRepository)
+        return new JobBuilder("verify-payment", jobRepository)
                 .start(createTableIfNecessary)
                 .next(initialStep)
                 .build();
