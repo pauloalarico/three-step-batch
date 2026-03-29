@@ -1,4 +1,4 @@
-package com.example.demo.infra.batch.config.reader;
+package com.example.demo.infra.batch.config.reader.paymentvalidator;
 
 import com.example.demo.domain.model.Payment;
 import org.springframework.batch.infrastructure.item.ItemReader;
