@@ -1,6 +1,4 @@
 spring:
-  main:
-    allow-bean-definition-overriding: true
   application:
     name: demo
   datasource:
@@ -22,9 +20,12 @@ spring:
   batch:
     job:
       enabled: true
+    jdbc:
+      initialize-schema: true
 
-  sql:
-    init: always
+sql:
+  init:
+    mode: always
 
 
 app:
