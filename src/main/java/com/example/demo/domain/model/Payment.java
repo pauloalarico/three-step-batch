@@ -27,4 +27,9 @@ public class Payment {
 
     private PaymentStatus status;
 
+
+    public void applyValue(BigDecimal value) {
+        this.value = value;
+    }
+
 }
