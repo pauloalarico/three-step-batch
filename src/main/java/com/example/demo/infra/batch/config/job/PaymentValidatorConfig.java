@@ -2,6 +2,7 @@ package com.example.demo.infra.batch.config.job;
 
 import com.example.demo.domain.model.Payment;
 import com.example.demo.domain.model.ProcessedPayment;
+import com.example.demo.infra.batch.config.processor.PaymentTaxProcessor;
 import com.example.demo.infra.batch.config.processor.ValidatorPayment;
 import org.springframework.batch.core.configuration.annotation.EnableJdbcJobRepository;
 import org.springframework.batch.core.job.Job;
@@ -26,10 +27,11 @@ import javax.sql.DataSource;
 public class PaymentValidatorConfig {
 
     @Bean
-    public Job job(JobRepository jobRepository, Step initialStep, Step createTableIfNecessary) {
-        return new JobBuilder("verify-payment", jobRepository)
+    public Job job(JobRepository jobRepository, Step initialStep, Step createTableIfNecessary, Step partitionStep) {
+        return new JobBuilder("verify-paddddd", jobRepository)
                 .start(createTableIfNecessary)
                 .next(initialStep)
+                .next(partitionStep)
                 .build();
     }
 
@@ -64,6 +66,24 @@ public class PaymentValidatorConfig {
                     resourceDatabasePopulator.execute(dataSource);
                     return RepeatStatus.FINISHED;
                 }), transactionManager)
+                .build();
+    }
+
+    @Bean
+    public Step applyTaxToOverduePayment(JobRepository jobRepository,
+                                         PlatformTransactionManager transactionManager,
+                                         ItemReader<Payment> overduePaymentReader,
+                                         PaymentTaxProcessor processor,
+                                         ItemWriter<Payment> writerOverduePayment
+                                         ) {
+
+        return new StepBuilder("tax-processor", jobRepository)
+                .allowStartIfComplete(true)
+                .<Payment, Payment>chunk(100)
+                .transactionManager(transactionManager)
+                .reader(overduePaymentReader)
+                .processor(processor)
+                .writer(writerOverduePayment)
                 .build();
     }
 
