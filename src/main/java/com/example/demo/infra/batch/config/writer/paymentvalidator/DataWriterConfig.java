@@ -1,4 +1,4 @@
-package com.example.demo.infra.batch.config.writer;
+package com.example.demo.infra.batch.config.writer.paymentvalidator;
 
 import com.example.demo.domain.model.Payment;
 import com.example.demo.domain.model.ProcessedPayment;
