@@ -27,11 +27,13 @@ import javax.sql.DataSource;
 public class PaymentValidatorConfig {
 
     @Bean
-    public Job job(JobRepository jobRepository, Step initialStep, Step createTableIfNecessary, Step partitionStep) {
-        return new JobBuilder("verify-paddddd", jobRepository)
+    public Job job(JobRepository jobRepository, Step initialStep, Step createTableIfNecessary, Step partitionStep,
+                   Step finalReportStep) {
+        return new JobBuilder("verify-payment", jobRepository)
                 .start(createTableIfNecessary)
                 .next(initialStep)
                 .next(partitionStep)
+                .next(finalReportStep)
                 .build();
     }
 
