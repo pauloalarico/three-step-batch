@@ -8,8 +8,10 @@ import org.springframework.batch.infrastructure.item.ExecutionContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,15 +41,27 @@ public class PaymentTaxThreadsConfiguration {
     }
 
     @Bean
-    public Partitioner partitioner() {
+    public Partitioner partitioner(DataSource dataSource) {
         return gridSize -> {
-            int range = 400/gridSize;
+
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+            Integer min = jdbcTemplate.queryForObject("SELECT MIN(id) FROM dead_payments", Integer.class);
+            Integer max = jdbcTemplate.queryForObject("SELECT MAX(id) FROM dead_payments", Integer.class);
+
+            int range = (max - min) / gridSize + 1;
+
+
             Map<String, ExecutionContext> partitions = new HashMap<>();
 
             for (int i = 0; i < gridSize; i++) {
                 ExecutionContext context = new ExecutionContext();
-                context.putInt("minId", i * range);
-                context.putInt("maxId", (i + 1) * range);
+
+                int start = min + i * range;
+                int end = max + range - 1;
+
+                context.putInt("minId", start);
+                context.putInt("maxId", end);
                 partitions.put("partition-" + i, context);
 
             }
