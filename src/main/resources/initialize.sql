@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS public.payments (
     client_id BIGINT,
     client_name VARCHAR(255),
     value NUMERIC,
+    total_value NUMERIC,
     due_date DATE,
     status VARCHAR(50)
 );
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS public.dead_payments (
     client_id BIGINT,
     client_name VARCHAR(255),
     value NUMERIC,
+    total_value NUMERIC,
     due_date DATE,
     status VARCHAR(50)
 );

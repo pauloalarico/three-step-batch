@@ -23,13 +23,15 @@ public class Payment {
 
     private BigDecimal value;
 
+    private BigDecimal valueWithTax;
+
     private LocalDate dueDate;
 
     private PaymentStatus status;
 
 
     public void applyValue(BigDecimal value) {
-        this.value = value;
+        this.valueWithTax = value;
     }
 
 }
