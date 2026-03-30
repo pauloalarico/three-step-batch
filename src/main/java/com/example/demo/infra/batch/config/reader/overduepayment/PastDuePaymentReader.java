@@ -1,6 +1,7 @@
 package com.example.demo.infra.batch.config.reader.overduepayment;
 
 import com.example.demo.domain.model.Payment;
+import com.example.demo.infra.batch.config.reader.utils.PaymentRowMapper;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.infrastructure.item.database.JdbcCursorItemReader;
 import org.springframework.batch.infrastructure.item.database.builder.JdbcCursorItemReaderBuilder;
@@ -22,7 +23,7 @@ public class PastDuePaymentReader {
                 .dataSource(dataSource)
                 .name("overduePaymentReader")
                 .sql("SELECT * FROM dead_payments WHERE id >= ? AND id <= ?")
-                .rowMapper(new OverduePaymentRowMapper())
+                .rowMapper(new PaymentRowMapper())
                 .queryArguments(minId, maxId)
                 .build();
     }
