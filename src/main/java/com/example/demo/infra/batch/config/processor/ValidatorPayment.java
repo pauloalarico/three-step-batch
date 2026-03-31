@@ -5,9 +5,9 @@ import com.example.demo.domain.model.Payment;
 import com.example.demo.domain.model.ProcessedPayment;
 import org.jspecify.annotations.Nullable;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class ValidatorPayment implements ItemProcessor<Payment, ProcessedPayment> {
 
 
