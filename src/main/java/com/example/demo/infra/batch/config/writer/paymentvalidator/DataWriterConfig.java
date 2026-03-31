@@ -47,7 +47,6 @@ public class DataWriterConfig {
                         INSERT INTO dead_payments (id, client_id, client_name, value, total_value, due_date, status)
                          VALUES (?, ?, ?, ?, ?, ?, ?)
                         """)
-                .beanMapped()
                 .itemPreparedStatementSetter((processedPayment, ps) -> {
                     Payment p = processedPayment.payment();
                     ps.setObject(1, p.getId());
