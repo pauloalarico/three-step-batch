@@ -1,4 +1,6 @@
-package com.example.demo.application.service;
+package com.example.demo.domain.servjce;
+
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -6,15 +8,15 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public final class TaxCalculator {
+@Component
+public class CompoundTaxCalculator implements TaxPolicy {
 
     private static final BigDecimal FIXED_PERCENTAGE_TAX = new BigDecimal("0.02");
 
     private static final BigDecimal VARIABLE_PERCENTAGE_TAX = new BigDecimal("0.01");
 
-
-    public static BigDecimal calculateTax (BigDecimal value, LocalDate dueDate) {
-
+    @Override
+    public BigDecimal calculateTax(BigDecimal value, LocalDate dueDate) {
         int monthsDifference = (int) calculateDifferenceFromNow(dueDate);
 
         BigDecimal valueWithFixedValue = value.multiply(FIXED_PERCENTAGE_TAX);
