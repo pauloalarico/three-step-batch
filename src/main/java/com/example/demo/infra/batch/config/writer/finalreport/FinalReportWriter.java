@@ -21,8 +21,8 @@ public class FinalReportWriter {
                 .resource(new FileSystemResource(outputResource + "final_report.csv"))
                 .delimited()
                 .delimiter(",")
-                .names(new String[] {"clientId", "clientName", "originalValue", "totalWithTax"})
-                .headerCallback(w -> w.write("client_id, nm_client, original_payment_value, total_payment_value"))
+                .names(new String[] {"clientId", "clientName", "originalValue", "totalWithTax", "status"})
+                .headerCallback(w -> w.write("client_id, nm_client, original_payment_value, total_payment_value, payment_satus"))
                 .build();
 
     }

@@ -18,7 +18,8 @@ public class FinalReportProcessor implements ItemProcessor<Payment, FinalReport>
                 item.getClientId(),
                 item.getClientName(),
                 item.getValue(),
-                item.getValueWithTax()
+                item.getValueWithTax(),
+                item.getStatus()
         );
     }
 
