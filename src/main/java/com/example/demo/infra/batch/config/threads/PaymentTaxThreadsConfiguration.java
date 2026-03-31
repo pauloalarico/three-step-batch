@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.sql.DataSource;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +50,10 @@ public class PaymentTaxThreadsConfiguration {
             Integer min = jdbcTemplate.queryForObject("SELECT MIN(id) FROM dead_payments", Integer.class);
             Integer max = jdbcTemplate.queryForObject("SELECT MAX(id) FROM dead_payments", Integer.class);
 
+            if (min == null | max == null) {
+                return Collections.emptyMap();
+            }
+
             int range = (max - min) / gridSize + 1;
 
 
@@ -58,7 +63,7 @@ public class PaymentTaxThreadsConfiguration {
                 ExecutionContext context = new ExecutionContext();
 
                 int start = min + i * range;
-                int end = max + range - 1;
+                int end = Math.min(start + range - 1, max);
 
                 context.putInt("minId", start);
                 context.putInt("maxId", end);
