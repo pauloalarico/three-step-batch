@@ -14,7 +14,7 @@ public class FinalReportReader implements ItemReader<Payment>, ItemStream {
 
     private final JdbcCursorItemReader<Payment> deadPaymentsReader;
 
-    private boolean nextDeadPayment = false;
+    private boolean deadPaymentsExhausted = false;
 
     public FinalReportReader(JdbcCursorItemReader<Payment> paymentsReader, JdbcCursorItemReader<Payment> deadPaymentsReader) {
         this.paymentsReader = paymentsReader;
@@ -25,14 +25,14 @@ public class FinalReportReader implements ItemReader<Payment>, ItemStream {
     @Override
     public @Nullable Payment read() throws Exception {
 
-        if (!nextDeadPayment) {
+        if (!deadPaymentsExhausted) {
             Payment payment = deadPaymentsReader.read();
 
             if (payment != null) {
                 return payment;
             }
 
-            nextDeadPayment = true;
+            deadPaymentsExhausted = true;
         }
 
         return paymentsReader.read();
@@ -41,6 +41,7 @@ public class FinalReportReader implements ItemReader<Payment>, ItemStream {
 
     @Override
     public void open(ExecutionContext executionContext) throws ItemStreamException {
+        this.deadPaymentsExhausted = executionContext.getInt("deadPaymentsExhausted", 0) == 1;
         paymentsReader.open(executionContext);
         deadPaymentsReader.open(executionContext);
 
@@ -48,6 +49,7 @@ public class FinalReportReader implements ItemReader<Payment>, ItemStream {
 
     @Override
     public void update(ExecutionContext executionContext) throws ItemStreamException {
+        executionContext.put("deadPaymentsExhausted", deadPaymentsExhausted ? 1 : 0);
         paymentsReader.update(executionContext);
         deadPaymentsReader.update(executionContext);
     }
