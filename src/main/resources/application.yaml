@@ -1,4 +1,7 @@
 spring:
+  sql:
+    init:
+      mode: never
   application:
     name: demo
   datasource:
@@ -21,12 +24,9 @@ spring:
     job:
       enabled: true
     jdbc:
-      initialize-schema: true
-
-sql:
-  init:
-    mode: always
+      initialize-schema: "always"
 
 
 app:
   resource: ${RESOURCE_FILE:.input/.}
+  output: ${FILE_PATH}
