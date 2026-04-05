@@ -1,6 +1,7 @@
 package com.example.demo.infra.batch.config.writer.overduepayment;
 
 import com.example.demo.domain.model.Payment;
+import com.example.demo.domain.model.TaxedPayment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.infrastructure.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.infrastructure.item.database.builder.JdbcBatchItemWriterBuilder;
@@ -14,8 +15,8 @@ import javax.sql.DataSource;
 public class OverduePaymentWriter {
 
     @Bean
-    public JdbcBatchItemWriter<Payment> writerOverduePayment(DataSource dataSource) {
-        return new JdbcBatchItemWriterBuilder<Payment>()
+    public JdbcBatchItemWriter<TaxedPayment> writerOverduePayment(DataSource dataSource) {
+        return new JdbcBatchItemWriterBuilder<TaxedPayment>()
                 .dataSource(dataSource)
                 .sql("""
                         INSERT INTO dead_payments (id, total_value)
@@ -23,10 +24,10 @@ public class OverduePaymentWriter {
                         ON CONFLICT (id)
                         DO UPDATE SET total_value = EXCLUDED.total_value;
                         """)
-                .itemPreparedStatementSetter(((payment, ps) -> {
-                    ps.setObject(1, payment.getId());
-                    ps.setObject(2, payment.getValueWithTax());
-                    log.info("ID: {}, VALUE: {}", payment.getId(), payment.getValueWithTax());;
+                .itemPreparedStatementSetter(((taxedPayment, ps) -> {
+                    ps.setObject(1, taxedPayment.paymentId());
+                    ps.setObject(2, taxedPayment.taxedValue());
+                    log.info("ID: {}, VALUE: {}", taxedPayment.paymentId(), taxedPayment.taxedValue());;
 
                 }))
                 .build();
