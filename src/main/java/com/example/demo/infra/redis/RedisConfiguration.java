@@ -11,15 +11,14 @@ import tools.jackson.databind.ObjectMapper;
 @Configuration
 public class RedisConfiguration {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     @Bean
     LettuceConnectionFactory connectionFactory() {
         return new LettuceConnectionFactory();
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory connectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory connectionFactory,
+                                                       ObjectMapper objectMapper) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
