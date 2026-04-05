@@ -8,6 +8,8 @@ import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+
 @Component
 @RequiredArgsConstructor
 public class PaymentTaxProcessor implements ItemProcessor<Payment, TaxedPayment> {
@@ -30,8 +32,18 @@ public class PaymentTaxProcessor implements ItemProcessor<Payment, TaxedPayment>
     }
 
     private void persistAtRedis(TaxedPayment taxedPayment) {
+
         String key = PREFIX_REDIS_KEY + taxedPayment.paymentId();
+
         redisTemplate.opsForList().rightPush(key, taxedPayment);
+        applyTimeToLive(key);
+    }
+
+    private void applyTimeToLive(String key) {
+
+        Duration hours = Duration.ofHours(2);
+
+        redisTemplate.expire(key, hours);
     }
 
 }
