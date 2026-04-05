@@ -2,6 +2,7 @@ package com.example.demo.infra.batch.config.job;
 
 import com.example.demo.domain.model.Payment;
 import com.example.demo.domain.model.ProcessedPayment;
+import com.example.demo.domain.model.TaxedPayment;
 import com.example.demo.infra.batch.config.processor.PaymentTaxProcessor;
 import com.example.demo.infra.batch.config.processor.ValidatorPayment;
 import org.springframework.batch.core.configuration.annotation.EnableJdbcJobRepository;
@@ -76,12 +77,12 @@ public class PaymentValidatorConfig {
                                          PlatformTransactionManager transactionManager,
                                          ItemReader<Payment> overduePaymentReader,
                                          PaymentTaxProcessor processor,
-                                         ItemWriter<Payment> writerOverduePayment
+                                         ItemWriter<TaxedPayment> writerOverduePayment
                                          ) {
 
         return new StepBuilder("tax-processor", jobRepository)
                 .allowStartIfComplete(true)
-                .<Payment, Payment>chunk(100)
+                .<Payment, TaxedPayment>chunk(100)
                 .transactionManager(transactionManager)
                 .reader(overduePaymentReader)
                 .processor(processor)
