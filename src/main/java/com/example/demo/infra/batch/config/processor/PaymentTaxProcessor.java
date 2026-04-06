@@ -16,7 +16,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class PaymentTaxProcessor implements ItemProcessor<Payment, TaxedPayment> {
 
-    private static final Logger log = LoggerFactory.getLogger(PaymentTaxProcessor.class);
+    private final static Logger log = LoggerFactory.getLogger(PaymentTaxProcessor.class);
 
     private final TaxPolicy taxPolicy;
 
@@ -34,7 +34,7 @@ public class PaymentTaxProcessor implements ItemProcessor<Payment, TaxedPayment>
         try {
             persistAtRedis(taxedPayment);
         } catch (Exception e) {
-            log.error("Unable connect to redis, for id: {}, cause of: {}", item.getId(), e.getMessage());
+            log.warn("Unable connect to redis, for id: {}, cause of: {}", item.getId(), e.getMessage());
         }
 
         return taxedPayment;
