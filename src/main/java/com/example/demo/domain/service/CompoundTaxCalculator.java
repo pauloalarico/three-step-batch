@@ -1,4 +1,4 @@
-package com.example.demo.domain.servjce;
+package com.example.demo.domain.service;
 
 import org.springframework.stereotype.Component;
 

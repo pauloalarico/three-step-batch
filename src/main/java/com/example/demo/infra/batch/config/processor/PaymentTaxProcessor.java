@@ -2,7 +2,7 @@ package com.example.demo.infra.batch.config.processor;
 
 import com.example.demo.domain.model.Payment;
 import com.example.demo.domain.model.TaxedPayment;
-import com.example.demo.domain.servjce.TaxPolicy;
+import com.example.demo.domain.service.TaxPolicy;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
