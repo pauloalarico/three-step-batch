@@ -26,6 +26,10 @@ spring:
     jdbc:
       initialize-schema: "always"
 
+  data:
+    redis:
+      port: ${REDIS_PORT}
+      host: ${REDIS_URL}
 
 app:
   resource: ${RESOURCE_FILE:.input/.}
