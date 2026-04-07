@@ -34,3 +34,4 @@ spring:
 app:
   resource: ${RESOURCE_FILE:.input/.}
   output: ${FILE_PATH}
+  fileName: ${FILE_NAME}
