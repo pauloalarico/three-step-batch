@@ -6,13 +6,13 @@ import org.springframework.batch.infrastructure.item.*;
 
 import java.util.List;
 
-public class PaymentCheckerWriter implements ItemWriter<ProcessedPayment> {
+public class PaymentDispatcherWriter implements ItemWriter<ProcessedPayment> {
 
     private final ItemWriter<ProcessedPayment> writerSuccess;
 
     private final ItemWriter<ProcessedPayment> writerError;
 
-    public PaymentCheckerWriter(ItemWriter<ProcessedPayment> writerSuccess, ItemWriter<ProcessedPayment> writerError) {
+    public PaymentDispatcherWriter(ItemWriter<ProcessedPayment> writerSuccess, ItemWriter<ProcessedPayment> writerError) {
         this.writerSuccess = writerSuccess;
         this.writerError = writerError;
     }

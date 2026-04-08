@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 
 @Configuration
-public class FinalReportWriter {
+public class FinalReportConfiguration {
 
     @Value("${app.output}")
     private String outputResource;
@@ -22,7 +22,7 @@ public class FinalReportWriter {
                 .delimited()
                 .delimiter(",")
                 .names(new String[] {"clientId", "clientName", "originalValue", "totalWithTax", "status"})
-                .headerCallback(w -> w.write("client_id, nm_client, original_payment_value, total_payment_value, payment_satus"))
+                .headerCallback(w -> w.write("client_id, nm_client, original_payment_value, total_payment_value, payment_status"))
                 .build();
 
     }

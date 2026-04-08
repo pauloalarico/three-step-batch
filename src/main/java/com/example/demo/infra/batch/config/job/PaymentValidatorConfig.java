@@ -4,7 +4,7 @@ import com.example.demo.domain.model.Payment;
 import com.example.demo.domain.model.ProcessedPayment;
 import com.example.demo.domain.model.TaxedPayment;
 import com.example.demo.infra.batch.config.processor.PaymentTaxProcessor;
-import com.example.demo.infra.batch.config.processor.ValidatorPayment;
+import com.example.demo.infra.batch.config.processor.PaymentValidator;
 import org.springframework.batch.core.configuration.annotation.EnableJdbcJobRepository;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -41,7 +41,7 @@ public class PaymentValidatorConfig {
     @Bean
     public Step initialStep(JobRepository jobRepository,
                             ItemReader<Payment> reader,
-                            ValidatorPayment processor,
+                            PaymentValidator processor,
                             ItemWriter<ProcessedPayment> compositeItemWriter,
                             PlatformTransactionManager transactionManager) {
 

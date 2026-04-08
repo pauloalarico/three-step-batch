@@ -13,9 +13,9 @@ import javax.sql.DataSource;
 public class DataWriterConfig {
 
     @Bean
-    public PaymentCheckerWriter compositeItemWriter(JdbcBatchItemWriter<ProcessedPayment> writerSuccess,
-                                                                               JdbcBatchItemWriter<ProcessedPayment> writerError) {
-        return new PaymentCheckerWriter(writerSuccess, writerError);
+    public PaymentDispatcherWriter compositeItemWriter(JdbcBatchItemWriter<ProcessedPayment> writerSuccess,
+                                                       JdbcBatchItemWriter<ProcessedPayment> writerError) {
+        return new PaymentDispatcherWriter(writerSuccess, writerError);
     }
 
     @Bean
