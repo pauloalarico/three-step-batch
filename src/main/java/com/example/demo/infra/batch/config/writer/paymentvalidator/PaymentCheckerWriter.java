@@ -1,5 +1,6 @@
 package com.example.demo.infra.batch.config.writer.paymentvalidator;
 
+import com.example.demo.domain.enums.PaymentValidator;
 import com.example.demo.domain.model.ProcessedPayment;
 import org.springframework.batch.infrastructure.item.*;
 
@@ -19,11 +20,11 @@ public class PaymentCheckerWriter implements ItemWriter<ProcessedPayment> {
     @Override
     public void write(Chunk<? extends ProcessedPayment> chunk) throws Exception {
         List<? extends ProcessedPayment> success = chunk.getItems().stream()
-                .filter(ProcessedPayment::processed)
+                .filter(p -> p.status().equals(PaymentValidator.VALID))
                 .toList();
 
         List<? extends ProcessedPayment> errors = chunk.getItems().stream()
-                .filter(p-> !p.processed())
+                .filter(p -> p.status().equals(PaymentValidator.INVALID))
                 .toList();
 
         if(!success.isEmpty()) {
