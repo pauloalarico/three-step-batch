@@ -77,8 +77,7 @@ public class PaymentValidatorConfig {
                                          PlatformTransactionManager transactionManager,
                                          ItemReader<Payment> overduePaymentReader,
                                          PaymentTaxProcessor processor,
-                                         ItemWriter<TaxedPayment> writerOverduePayment
-                                         ) {
+                                         ItemWriter<TaxedPayment> writerOverduePayment) {
 
         return new StepBuilder("tax-processor", jobRepository)
                 .allowStartIfComplete(true)

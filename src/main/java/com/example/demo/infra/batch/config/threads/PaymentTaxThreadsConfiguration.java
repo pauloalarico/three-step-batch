@@ -50,7 +50,7 @@ public class PaymentTaxThreadsConfiguration {
             Integer min = jdbcTemplate.queryForObject("SELECT MIN(id) FROM dead_payments", Integer.class);
             Integer max = jdbcTemplate.queryForObject("SELECT MAX(id) FROM dead_payments", Integer.class);
 
-            if (min == null | max == null) {
+            if (min == null || max == null) {
                 return Collections.emptyMap();
             }
 
