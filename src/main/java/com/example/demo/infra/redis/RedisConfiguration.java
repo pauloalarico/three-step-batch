@@ -18,11 +18,9 @@ public class RedisConfiguration {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory connectionFactory, ObjectMapper objectMapper) {
-
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new GenericJacksonJsonRedisSerializer(objectMapper));
         redisTemplate.setValueSerializer(new GenericJacksonJsonRedisSerializer(objectMapper));
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
