@@ -29,13 +29,4 @@ public class Payment {
 
     private PaymentStatus status;
 
-
-    public void applyOverdueTax(BigDecimal value) {
-        if (status != PaymentStatus.VENCIDA) {
-            throw new IllegalArgumentException("Payment got to be overdue!");
-        }
-
-        this.valueWithTax = value;
-    }
-
 }
