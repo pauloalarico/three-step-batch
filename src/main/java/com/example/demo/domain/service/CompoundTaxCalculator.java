@@ -20,12 +20,11 @@ public class CompoundTaxCalculator implements TaxPolicy {
         int monthsDifference = (int) calculateDifferenceFromNow(dueDate);
 
         BigDecimal valueWithFixedValue = value.multiply(FIXED_PERCENTAGE_TAX);
-        BigDecimal totalFixedValue = value.add(valueWithFixedValue);
 
         BigDecimal multiplierTaxWithTime = (VARIABLE_PERCENTAGE_TAX.add(BigDecimal.ONE, MathContext.DECIMAL32)).pow(monthsDifference);
-        BigDecimal totalTaxWithTime = value.multiply(multiplierTaxWithTime);
+        BigDecimal compoundInterest = value.multiply(multiplierTaxWithTime).subtract(value);
 
-        return totalFixedValue.add(totalTaxWithTime).setScale(2, RoundingMode.HALF_UP);
+        return value.add(compoundInterest).add(valueWithFixedValue).setScale(2, RoundingMode.HALF_UP);
     }
 
     private static long calculateDifferenceFromNow (LocalDate dueDate) {
