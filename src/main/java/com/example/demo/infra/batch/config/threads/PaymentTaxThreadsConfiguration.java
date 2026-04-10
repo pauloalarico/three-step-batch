@@ -1,5 +1,6 @@
 package com.example.demo.infra.batch.config.threads;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.batch.core.partition.Partitioner;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.Step;
@@ -54,25 +55,30 @@ public class PaymentTaxThreadsConfiguration {
                 return Collections.emptyMap();
             }
 
-            int range = (max - min) / gridSize + 1;
-
-
-            Map<String, ExecutionContext> partitions = new HashMap<>();
-
-            for (int i = 0; i < gridSize; i++) {
-                ExecutionContext context = new ExecutionContext();
-
-                int start = min + i * range;
-                int end = Math.min(start + range - 1, max);
-
-                context.putInt("minId", start);
-                context.putInt("maxId", end);
-                partitions.put("partition-" + i, context);
-
-            }
+            Map<String, ExecutionContext> partitions = getStringExecutionContextMap(gridSize, max, min);
 
             return partitions;
         };
+    }
+
+    private static @NonNull Map<String, ExecutionContext> getStringExecutionContextMap(int gridSize, Integer max, Integer min) {
+        int range = (max - min) / gridSize + 1;
+
+
+        Map<String, ExecutionContext> partitions = new HashMap<>();
+
+        for (int i = 0; i < gridSize; i++) {
+            ExecutionContext context = new ExecutionContext();
+
+            int start = min + i * range;
+            int end = Math.min(start + range - 1, max);
+
+            context.putInt("minId", start);
+            context.putInt("maxId", end);
+            partitions.put("partition-" + i, context);
+
+        }
+        return partitions;
     }
 
 }
