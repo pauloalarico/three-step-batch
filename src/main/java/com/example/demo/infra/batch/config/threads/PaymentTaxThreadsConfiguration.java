@@ -55,9 +55,7 @@ public class PaymentTaxThreadsConfiguration {
                 return Collections.emptyMap();
             }
 
-            Map<String, ExecutionContext> partitions = getStringExecutionContextMap(gridSize, max, min);
-
-            return partitions;
+            return getStringExecutionContextMap(gridSize, max, min);
         };
     }
 
